@@ -258,11 +258,22 @@ Licensed under the MIT License ~ http://threedubmedia.googlecode.com/files/MIT-L
                     }
                 }
 
+                // re-interpret zoom range to be an absolute range instead of
+                // the range of possible widths
+                if (zr && zr[0] != null && min < zr[0]) {
+                  min = zr[0]
+                }
+                if (zr && zr[1] != null && max > zr[1]) {
+                  max = zr[1]
+                }
+                /*
+                // previous code where zoom range values are compared to the width
                 var range = max - min;
                 if (zr &&
                     ((zr[0] != null && range < zr[0]) ||
                      (zr[1] != null && range > zr[1])))
                     return;
+                */
             
                 opts.min = min;
                 opts.max = max;
