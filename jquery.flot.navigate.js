@@ -248,7 +248,8 @@ Licensed under the MIT License ~ http://threedubmedia.googlecode.com/files/MIT-L
                     min = minmax[axis.direction].min,
                     max = minmax[axis.direction].max,
                     zr = opts.zoomRange,
-                    pr = opts.panRange;
+                    pr = opts.panRange,
+                    gridLock = opts.gridLock;
 
                 if (zr === false) // no zooming on this axis
                     return;
@@ -289,6 +290,31 @@ Licensed under the MIT License ~ http://threedubmedia.googlecode.com/files/MIT-L
                     return;
                 */
             
+                // lock to grid
+                if (gridLock) {
+                  if (amount > 1) {
+                    // zooming in
+                    var newMin = Math.round(min / gridLock) * gridLock;
+                    var newMax = Math.round(max / gridLock) * gridLock;
+                    if (newMin === opts.min && newMax === opts.max || newMin === newMax) {
+                      // didn't move in, or moved in too much
+                      if (opts.max - opts.min > gridLock) {
+                        // room to move in, nudge the side that wanted to move closer
+                        if (min - opts.min > opts.max - max) {
+                          newMin = opts.min + gridLock;
+                        } else {
+                          newMax = opts.max - gridLock;
+                        }
+                      }
+                    }
+                    min = newMin;
+                    max = newMax;
+                  } else {
+                    min = Math.floor(min / gridLock) * gridLock;
+                    max = Math.ceil(max / gridLock) * gridLock;
+                  }
+                }
+
                 opts.min = min;
                 opts.max = max;
             });
