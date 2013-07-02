@@ -114,7 +114,8 @@ Licensed under the MIT License ~ http://threedubmedia.googlecode.com/files/MIT-L
         zoom: {
             interactive: false,
             trigger: "dblclick", // or "click" for single click
-            amount: 1.5 // how much to zoom relative to current position, 2 = 200% (zoom in), 0.5 = 50% (zoom out)
+            amount: 1.5, // how much to zoom relative to current position, 2 = 200% (zoom in), 0.5 = 50% (zoom out)
+            skipDraw: false
         },
         pan: {
             interactive: false,
@@ -211,7 +212,8 @@ Licensed under the MIT License ~ http://threedubmedia.googlecode.com/files/MIT-L
             
             var c = args.center,
                 amount = args.amount || plot.getOptions().zoom.amount,
-                w = plot.width(), h = plot.height();
+                w = plot.width(), h = plot.height(),
+                skipDraw = plot.getOptions().zoom.skipDraw;
 
             if (!c)
                 c = { left: w / 2, top: h / 2 };
@@ -319,8 +321,10 @@ Licensed under the MIT License ~ http://threedubmedia.googlecode.com/files/MIT-L
                 opts.max = max;
             });
             
-            plot.setupGrid();
-            plot.draw();
+            if (!skipDraw) {
+                plot.setupGrid();
+                plot.draw();
+            }
             
             if (!args.preventEvent)
                 plot.getPlaceholder().trigger("plotzoom", [ plot, args ]);
