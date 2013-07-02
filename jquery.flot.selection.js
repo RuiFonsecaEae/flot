@@ -144,6 +144,11 @@ The plugin allso adds the following methods to the plot object:
                 document.ondrag = savedhandlers.ondrag;
             }
 
+            if (!selection.active) {
+                // selection was canceled by escape key
+                return;
+            }
+
             // no more dragging
             selection.active = false;
             updateSelection(e);
@@ -306,6 +311,13 @@ The plugin allso adds the following methods to the plot object:
             return Math.abs(selection.second.x - selection.first.x) >= minSize &&
                 Math.abs(selection.second.y - selection.first.y) >= minSize;
         }
+
+        $(document).keyup(function (e) {
+            if (e.keyCode === 27) { // esc key
+                clearSelection(true);
+                selection.active = false;
+            }
+        });
 
         plot.clearSelection = clearSelection;
         plot.setSelection = setSelection;
